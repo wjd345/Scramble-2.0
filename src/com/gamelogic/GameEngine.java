@@ -7,11 +7,32 @@
 package com.gamelogic;
 
 import com.dictionary.Dictionary;
+import java.io.*;
+import java.nio.*;
+
+
 
 public class GameEngine {
 	
 	private Player playerOne;
 	private Player playerTwo;
+	private Dictionary dictionary;
+	private ObjectInputStream inPlayer;
+	private ObjectOutputStream outPlayer;
+	
+	/**
+	 * Constructor that takes in a single player for game play.
+	 * @param p1
+	 */
+	public GameEngine(Player p1) {
+		playerOne = p1;
+		try {
+			dictionary = new Dictionary();
+		}catch(IOException ioe) {
+			System.err.println("Error - Unable to find Dictionary File");
+			System.exit(0);
+		}
+	}
 	
 	/**
 	 * Constructor that takes in two player objects for the game play
@@ -21,6 +42,15 @@ public class GameEngine {
 	public GameEngine(Player p1, Player p2) {
 		playerOne = p1;
 		playerTwo = p2;
+		
+		try {
+			dictionary = new Dictionary();
+		}catch(IOException ioe) {
+			System.err.println("Error - Unable to find Dictionary File");
+			System.exit(0);
+		}
 	}
+	
+	
 
 }
