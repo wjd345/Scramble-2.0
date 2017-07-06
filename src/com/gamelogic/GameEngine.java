@@ -18,6 +18,7 @@ public class GameEngine implements Runnable {
 	private Player playerTwo;
 	private Dictionary dictionary;
 	private ObjectOutputStream outPlayerInfo;
+	private Vector<Player> outPlayers = new Vector<>();
 	
 	/**
 	 * Constructor that takes in a single player for game play.
@@ -54,16 +55,30 @@ public class GameEngine implements Runnable {
 	 * Takes in a Player Object and assess the 
 	 * @param player
 	 */
-	public void scorePlayer(Player player) {
+	public void scorePlayers() {
 		
-		Vector<String> playerWords = player.getPlayerWords();
+		Vector<String> playerOneWords = playerOne.getPlayerWords();
+		Vector<String> playerTwoWords = playerTwo.getPlayerWords();
 		
-		for(String word: playerWords) {
+		for(String word: playerOneWords) {
 			if(isValidWord(word)) {
-				player.setScore(word.length());
+				playerOne.setScore(word.length());
+				playerOne.incrementWordCount(1);
 				
 			}else {
-				player.setScore(0);
+				playerOne.setScore(0);
+				playerOne.incrementWordCount(0);
+			}
+		}
+		
+		for(String word: playerTwoWords) {
+			if(isValidWord(word)) {
+				playerTwo.setScore(word.length());
+				playerTwo.incrementWordCount(1);
+				
+			}else {
+				playerTwo.setScore(0);
+				playerTwo.incrementWordCount(0);
 			}
 		}
 	}
@@ -92,12 +107,46 @@ public class GameEngine implements Runnable {
 		}else if(playerOneScore < playerTwoScore) {
 			playerTwo.playerWon();
 			playerOne.playerLost();
+		}else{
+			if(playerOne.getWordCount() > playerTwo.getWordCount()){
+				playerOne.playerWon();
+				playerTwo.playerLost();
+			}else if(playerOne.getWordCount() < playerTwo.getWordCount()){
+				playerTwo.playerWon();
+				playerOne.playerLost();
+			}else{
+				int playerOneAdjustedScore = playerOne.getScore() + playerOne.getWordCount();
+				int playerTwoAdjustedScore = playerTwo.getScore() + playerTwo.getWordCount();
+				
+				if(playerOneAdjustedScore > playerTwoAdjustedScore){
+					playerOne.playerWon();
+					playerTwo.playerLost();
+				}else{
+					playerTwo.playerWon();
+					playerOne.playerLost();
+				}
+			}
 		}
 		
 	}
 	
+	public void sendPlayers(){
+		
+		outPlayers.add(playerOne);
+		outPlayers.add(playerTwo);
+		
+	}
+	
+	public Vector<Player> getPlayers(){
+		return outPlayers;
+	}
+	
+	@Override
 	public void run() {
 		//TODO: Implement runnable
+		this.scorePlayers();
+		this.gameResult();
+		this.sendPlayers();
 	}
 	
 

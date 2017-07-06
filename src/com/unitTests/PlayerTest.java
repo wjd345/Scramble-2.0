@@ -18,7 +18,7 @@ public class PlayerTest {
 	private Player testP3;
 	private Player testP4;
 	private Dictionary dictionary;
-	private Vector<String> testWordList;
+	private Vector<String> testWordListOne, testWordListTwo;
 	private GameEngine testEngine;
 
 	@Before
@@ -28,7 +28,8 @@ public class PlayerTest {
 		 testP3 = new Player("Bruce Banner",2);
 		 testP4 = new Player("Steven Strange", 1);
 		 dictionary = new Dictionary();
-		 testWordList = new Vector<>();
+		 testWordListOne = new Vector<>();
+		 testWordListTwo = new Vector<>();
 		 testEngine = null;
 	}
 
@@ -40,7 +41,8 @@ public class PlayerTest {
 		testP3 = null;
 		testP4 = null;
 		dictionary = null;
-		testWordList = null;
+		testWordListOne = null;
+		testWordListTwo = null;
 		testEngine = null;
 		
 	}
@@ -60,8 +62,6 @@ public class PlayerTest {
 		
 		assertNotSame(testP1.getPlayerNumber(),testP2.getPlayerNumber());
 		assertNotEquals("Player is not player One",testP1.getPlayerNumber(),1);
-		
-		assertNull(testP1.getPlayerWords());
 		
 	}
 	
@@ -83,23 +83,30 @@ public class PlayerTest {
 	@Test
 	public void isThereAWinnerTest() {
 		
-		testWordList.add("pineapple");
-		testWordList.add("bacon");
+		testWordListOne.add("pineapple");
+		testWordListOne.add("bacon");
 		
-		testP2.addWords(testWordList);
+		testP2.addWords(testWordListOne);
 		
-		testWordList.add("turtle");
-		testWordList.add("mouse");
+		testWordListTwo.add("turtle");
+		testWordListTwo.add("mouse");
 		
-		testP3.addWords(testWordList);
+		testP3.addWords(testWordListTwo);
 		testEngine = new GameEngine(testP2,testP3);
 		
-		testEngine.scorePlayer(testP2);
-		testEngine.scorePlayer(testP3);
-		
+		testEngine.scorePlayers();
 		testEngine.gameResult();
 		
+		testEngine.sendPlayers();
 		
+		Player scoredTestP2 = testEngine.getPlayers().get(0);
+		Player scoredTestP3 = testEngine.getPlayers().get(1);
+		
+		System.out.printf("Score for P2: %d, Score for P3: %d\n",scoredTestP2.getScore(),scoredTestP3.getScore());
+		System.out.printf("Win Count: %d\n", scoredTestP2.getPlayerWins());
+		
+		
+		assertEquals("Test Player 2 has Won",scoredTestP2.getPlayerWins(),1);
 		
 	}
 	
