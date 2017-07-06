@@ -9,16 +9,15 @@ package com.gamelogic;
 import com.dictionary.Dictionary;
 import java.io.*;
 import java.nio.*;
+import java.util.Vector;
 
 
-
-public class GameEngine {
+public class GameEngine implements Runnable {
 	
 	private Player playerOne;
 	private Player playerTwo;
 	private Dictionary dictionary;
-	private ObjectInputStream inPlayer;
-	private ObjectOutputStream outPlayer;
+	private ObjectOutputStream outPlayerInfo;
 	
 	/**
 	 * Constructor that takes in a single player for game play.
@@ -51,6 +50,55 @@ public class GameEngine {
 		}
 	}
 	
+	/**
+	 * Takes in a Player Object and assess the 
+	 * @param player
+	 */
+	public void scorePlayer(Player player) {
+		
+		Vector<String> playerWords = player.getPlayerWords();
+		
+		for(String word: playerWords) {
+			if(isValidWord(word)) {
+				player.setScore(word.length());
+				
+			}else {
+				player.setScore(0);
+			}
+		}
+	}
+	
+	/**
+	 * Checks to make sure that the word is in the Dictionary
+	 * @param word
+	 * @return
+	 */
+	private boolean isValidWord(String word) {
+		if(!dictionary.contains(word)) {
+			return false;
+		}else {
+			return true;
+		}
+	}
+	
+	public void gameResult(){
+		
+		int playerOneScore = playerOne.getScore();
+		int playerTwoScore = playerTwo.getScore();
+		
+		if(playerOneScore > playerTwoScore) {
+			playerOne.playerWon();
+			playerTwo.playerLost();
+		}else if(playerOneScore < playerTwoScore) {
+			playerTwo.playerWon();
+			playerOne.playerLost();
+		}
+		
+	}
+	
+	public void run() {
+		//TODO: Implement runnable
+	}
 	
 
 }

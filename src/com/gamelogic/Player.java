@@ -10,19 +10,21 @@ import java.util.Vector;
 
 public class Player implements Serializable {
 	
-	public String playerName;
-	public int playerNumber;
-	public int playerWins;
-	public int playerLoses;
-	public int playerTies;
-	public int wordCount;
-	public int score;
+	private String playerName;
+	private int playerNumber;
+	private int playerWins;
+	private int playerLoses;
+	private int playerTies;
+	private int wordCount;
+	private int score;
 	private Vector<String> playerWords;
 	
 	/**
 	 * Empty Player for Testing purposes
 	 */
 	public Player() {
+		
+		playerName = null;
 		playerNumber = 0;
 		playerWins = 0;
 		playerLoses = 0;
@@ -51,6 +53,10 @@ public class Player implements Serializable {
 		
 		playerWords = new Vector<>();
 	}
+	
+	public void namePlayer(String name) {
+		playerName = name;
+	}
 
 	/**
 	 * @return the playerName
@@ -66,6 +72,9 @@ public class Player implements Serializable {
 		return playerNumber;
 	}
 
+	public void playerWon() {
+		playerWins += 1;
+	}
 	/**
 	 * @return the playerWins
 	 */
@@ -73,11 +82,18 @@ public class Player implements Serializable {
 		return playerWins;
 	}
 
+	public void playerLost() {
+		playerLoses += 1;
+	}
 	/**
 	 * @return the playerLoses
 	 */
 	public int getPlayerLoses() {
 		return playerLoses;
+	}
+	
+	public void playerTie() {
+		playerTies += 1;
 	}
 
 	/**
@@ -87,6 +103,9 @@ public class Player implements Serializable {
 		return playerTies;
 	}
 
+	public void incrementWordCount(int count) {
+		this.wordCount += count;
+	}
 	/**
 	 * @return the wordCount
 	 */
@@ -100,7 +119,7 @@ public class Player implements Serializable {
 	 * @param score
 	 */
 	public void setScore(int score) {
-		this.score = score;
+		this.score += score;
 	}
 
 	/**
@@ -109,8 +128,15 @@ public class Player implements Serializable {
 	public int getScore() {
 		return score;
 	}
-
 	
+	public void clearScore() {
+		score = 0;
+	}
+
+	/**
+	 * Adds word to the players Vector
+	 * @param wordList
+	 */
 	public void addWords(Vector<String> wordList){
 		if(wordList != null) {
 			playerWords = wordList;
