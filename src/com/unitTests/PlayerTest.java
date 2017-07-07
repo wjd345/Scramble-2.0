@@ -17,7 +17,6 @@ public class PlayerTest {
 	private Player testP2;
 	private Player testP3;
 	private Player testP4;
-	private Dictionary dictionary;
 	private Vector<String> testWordListOne, testWordListTwo;
 	private GameEngine testEngine;
 
@@ -26,8 +25,8 @@ public class PlayerTest {
 		 testP1 = new Player();
 		 testP2 = new Player("Tony Stark", 1);
 		 testP3 = new Player("Bruce Banner",2);
-		 testP4 = new Player("Steven Strange", 1);
-		 dictionary = new Dictionary();
+		 testP4 = new Player("Steven Strange", 2);
+
 		 testWordListOne = new Vector<>();
 		 testWordListTwo = new Vector<>();
 		 testEngine = null;
@@ -40,7 +39,6 @@ public class PlayerTest {
 		testP2 = null;
 		testP3 = null;
 		testP4 = null;
-		dictionary = null;
 		testWordListOne = null;
 		testWordListTwo = null;
 		testEngine = null;
@@ -102,13 +100,9 @@ public class PlayerTest {
 		Player scoredTestP2 = testEngine.getPlayers().get(0);
 		Player scoredTestP3 = testEngine.getPlayers().get(1);
 		
-		System.out.printf("Score for P2: %d, Score for P3: %d\n",scoredTestP2.getScore(),scoredTestP3.getScore());
-		System.out.printf("Win Count: %d\n", scoredTestP2.getPlayerWins());
-		
-		
 		assertEquals("Test Player 2 has Won",scoredTestP2.getPlayerWins(),1);
+		assertEquals("Test Player 3 has lost the Game",scoredTestP3.getPlayerLoses(),1);
 		
 	}
-	
 
 }

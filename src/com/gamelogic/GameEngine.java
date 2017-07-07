@@ -121,9 +121,12 @@ public class GameEngine implements Runnable {
 				if(playerOneAdjustedScore > playerTwoAdjustedScore){
 					playerOne.playerWon();
 					playerTwo.playerLost();
-				}else{
+				}else if(playerOneAdjustedScore < playerTwoAdjustedScore){
 					playerTwo.playerWon();
 					playerOne.playerLost();
+				}else{
+					playerOne.playerTied();
+					playerTwo.playerTied();
 				}
 			}
 		}

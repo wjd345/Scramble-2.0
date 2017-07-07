@@ -91,6 +91,14 @@ public class Player implements Serializable {
 	public int getPlayerLoses() {
 		return playerLoses;
 	}
+	
+	public void playerTied(){
+		playerTies += 1;
+	}
+	
+	public int getPlayerTies(){
+		return playerTies; 
+	}
 
 	public void incrementWordCount(int count) {
 		this.wordCount += count;
