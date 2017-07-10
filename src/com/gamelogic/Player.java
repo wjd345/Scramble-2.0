@@ -64,6 +64,10 @@ public class Player implements Serializable {
 	public String getPlayerName() {
 		return playerName;
 	}
+	
+	public void setPlayerNumber(int playerNum){
+		this.playerNumber = playerNum;
+	}
 
 	/**
 	 * @return the playerNumber

@@ -22,3 +22,6 @@ to score the words, where it is then evaluated and sent back to the users to det
 Changed the visibility of some of the variables in Player. Began the implementation of the GameEngine class, creating logic methods to score the players
 words and check to ensure word is a valid word. Made GameEngine implement runnable to run as thread as server is running. Started unit tests for Player class
 will write unit tests as creating new classes to ensure functionality.
+
+07/10/2017: Still Working...\n
+Changed to have a simple socket server...nothing too crazy with this re-make. Workin with game engine to make sure logic is working properly.
