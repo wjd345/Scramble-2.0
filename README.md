@@ -24,4 +24,4 @@ words and check to ensure word is a valid word. Made GameEngine implement runnab
 will write unit tests as creating new classes to ensure functionality.
 
 07/10/2017: Still Working...\n
-Changed to have a simple socket server...nothing too crazy with this re-make. Workin with game engine to make sure logic is working properly.
+Changed to have a simple socket server...nothing too crazy with this re-make. Working with game engine to make sure logic is working properly.
