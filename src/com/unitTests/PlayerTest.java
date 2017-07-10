@@ -90,12 +90,9 @@ public class PlayerTest {
 		testWordListTwo.add("mouse");
 		
 		testP3.addWords(testWordListTwo);
+		
 		testEngine = new GameEngine(testP2,testP3);
 		
-		testEngine.scorePlayers();
-		testEngine.gameResult();
-		
-		testEngine.sendPlayers();
 		
 		Player scoredTestP2 = testEngine.getPlayers().get(0);
 		Player scoredTestP3 = testEngine.getPlayers().get(1);

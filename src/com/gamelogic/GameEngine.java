@@ -19,6 +19,7 @@ public class GameEngine implements Runnable {
 	private Dictionary dictionary;
 	private ObjectOutputStream outPlayerInfo;
 	private Vector<Player> outPlayers = new Vector<>();
+	private Thread runner; 
 	
 	/**
 	 * Constructor that takes in a single player for game play.
@@ -28,6 +29,10 @@ public class GameEngine implements Runnable {
 		playerOne = p1;
 		try {
 			dictionary = new Dictionary();
+			if(runner == null) {
+				runner = new Thread(this);
+				runner.start();
+			}
 		}catch(IOException ioe) {
 			System.err.println("Error - Unable to find Dictionary File");
 			System.exit(0);
@@ -45,6 +50,11 @@ public class GameEngine implements Runnable {
 		
 		try {
 			dictionary = new Dictionary();
+			if(runner == null) {
+				runner = new Thread(this);
+				runner.start();
+			}
+			
 		}catch(IOException ioe) {
 			System.err.println("Error - Unable to find Dictionary File");
 			System.exit(0);
@@ -138,6 +148,8 @@ public class GameEngine implements Runnable {
 		outPlayers.add(playerOne);
 		outPlayers.add(playerTwo);
 		
+		runner = null;
+		
 	}
 	
 	public Vector<Player> getPlayers(){
@@ -147,9 +159,12 @@ public class GameEngine implements Runnable {
 	@Override
 	public void run() {
 		//TODO: Implement runnable
-		this.scorePlayers();
-		this.gameResult();
-		this.sendPlayers();
+		Thread currentThread = Thread.currentThread();
+		while(runner == currentThread) {
+			scorePlayers();
+			gameResult();
+			sendPlayers();
+		}
 	}
 	
 
