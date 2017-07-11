@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.Date;
 import java.util.Vector;
 
+
 import com.gamelogic.Player;
 
 public class ScrambleServer implements Runnable {
@@ -21,22 +22,24 @@ public class ScrambleServer implements Runnable {
 	private int serverSession = 0;
 	private int playerNumber = 0;
 	private Vector<Player> playerSet;
+	
+	//Class ServerLog information
+	public JFrame frame;
+	public JTextArea jtaLog;
+	public JScrollPane scrollWindow;
+	
 
 	/**
 	 * Constructor that creates the Scramble Server Object;
 	 */
 	public ScrambleServer(){
 		
-		JFrame frame = new JFrame();
-		
-		JTextArea jtaLog = new JTextArea();
-		
-		JScrollPane scrollWindow = new JScrollPane(jtaLog);
+		frame = new JFrame();
+		jtaLog = new JTextArea();
+		scrollWindow = new JScrollPane(jtaLog);
 		
 		frame.add(scrollWindow,BorderLayout.CENTER);
-		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		frame.setSize(600,300);
 		frame.setTitle("Scramble Server");
 		frame.setVisible(true);
@@ -73,6 +76,8 @@ public class ScrambleServer implements Runnable {
 		}else{
 			Socket newPlayer = serverSocket.accept();
 			playerNumber += 1;
+			
+			
 		}
 		
 		
