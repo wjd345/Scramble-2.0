@@ -25,3 +25,6 @@ will write unit tests as creating new classes to ensure functionality.
 
 07/10/2017: Still Working...\n
 Changed to have a simple socket server...nothing too crazy with this re-make. Working with game engine to make sure logic is working properly.
+
+07/12/2017: Back at it again...\n
+Implementation of a "SplashPage" class where users see the game name and option buttons to either start a game or quit game play

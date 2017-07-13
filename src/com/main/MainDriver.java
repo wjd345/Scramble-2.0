@@ -9,13 +9,15 @@ import com.dictionary.Dictionary;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
-
+import com.gui.ScrambleSplashPage;
 public class MainDriver {
 	
 	
 	public static void main(String[] args) {
 		
-		
+		ScrambleSplashPage splashPage = new ScrambleSplashPage();
+		new Thread(splashPage).start();
+		/**
 		try {
 			Dictionary dictionary = new Dictionary();
 			BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -45,6 +47,6 @@ public class MainDriver {
 		}catch(IOException ioe) {
 			System.err.println("There was an Error reading the file!");
 			ioe.printStackTrace();
-		}
+		}*/
 	}
 }
