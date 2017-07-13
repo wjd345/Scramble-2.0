@@ -10,13 +10,31 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import com.gui.ScrambleSplashPage;
+import com.server.ScrambleServer;
 public class MainDriver {
 	
 	
 	public static void main(String[] args) {
 		
+		ScrambleServer server = new ScrambleServer();
+		new Thread(server).start();
+		
 		ScrambleSplashPage splashPage = new ScrambleSplashPage();
 		new Thread(splashPage).start();
+		
+		/*ScrambleSplashPage splashPage1 = new ScrambleSplashPage();
+		new Thread(splashPage1).start();
+		
+		ScrambleSplashPage splashPage2 = new ScrambleSplashPage();
+		new Thread(splashPage2).start();
+		
+		ScrambleSplashPage splashPage3 = new ScrambleSplashPage();
+		new Thread(splashPage3).start();
+		
+		ScrambleSplashPage splashPage4 = new ScrambleSplashPage();
+		new Thread(splashPage4).start();*/
+		
+		
 		/**
 		try {
 			Dictionary dictionary = new Dictionary();

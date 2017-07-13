@@ -3,38 +3,92 @@ package com.gui;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.BorderFactory;
+
 import java.io.*;
 import java.net.*;
 import java.awt.event.*;
-import javax.swing.Timer;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Collections;
-import java.util.Random;
 
 
-public class ScrambleGui extends JPanel implements Serializable, Runnable {
+
+public class ScrambleGui extends JPanel implements Serializable {
 	
-	
-	private JPanel scramblePanel;
+	// JPanel Variables
 	private JTextArea testText;
-	private JButton quitButton;
+	private JButton quitButton, serverTestConnection;
+	private JTextField testEntry;
+	private Socket playerConnection;
+	
+	// I/O Connections to Server;
+	private Socket playerSocket;
+	private ObjectInputStream playerIn;
+	private ObjectOutputStream playerOut;
+	private String readIn;
 	
 	public ScrambleGui(){
 		
-		scramblePanel = new JPanel();
 		
 		testText = new JTextArea("Test String");
+		testEntry = new JTextField();
+		serverTestConnection = new JButton("Connect to Server");
 		quitButton = new JButton("Quit");
 		
-		scramblePanel.setPreferredSize(new Dimension(600,800));
-		scramblePanel.setLayout(new BorderLayout());
+		setPreferredSize(new Dimension(600,800));
+		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		
-		scramblePanel.add(testText, BorderLayout.PAGE_START);
-		scramblePanel.add(quitButton, BorderLayout.PAGE_END);
+		testText.setAlignmentX(Component.CENTER_ALIGNMENT);
+		testEntry.setBorder(BorderFactory.createEmptyBorder(10, 20, 5,20));
+		testEntry.setFocusable(true);
+		testEntry.setBorder(BorderFactory.createLineBorder(Color.black));
+		serverTestConnection.setAlignmentX(Component.CENTER_ALIGNMENT);
+		quitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
-		scramblePanel.setVisible(true);
+		add(testEntry);
+		add(testText);
+		add(serverTestConnection);
+		add(quitButton);
+		
+		setBackground(new Color(250,210,20));
+		
+		setVisible(true);
+		
+		testEntry.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				String text = testEntry.getText();
+				
+				try{
+					playerOut.writeObject(text);
+					playerOut.flush();
+					
+					String serverText = (String)playerIn.readObject();
+					testText.setText(serverText);
+					
+				}catch(IOException | ClassNotFoundException ioe){
+					System.out.println("Error: " + ioe.getMessage());
+					ioe.printStackTrace();
+				}
+				
+				testEntry.setText("");
+			}
+		});
+		
+		serverTestConnection.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				
+				try{
+					serverConnection();
+					readIn = (String)playerIn.readObject();
+					testText.setText(readIn);
+					if(playerSocket.isConnected()){
+						serverTestConnection.setVisible(false);
+						
+					}
+				}catch(IOException | ClassNotFoundException ioe){
+					System.out.println("Error-" + ioe.getMessage());
+				}
+				
+			}
+		});
+		
 		
 	    quitButton.addActionListener(new ActionListener(){
 	    	
@@ -47,8 +101,10 @@ public class ScrambleGui extends JPanel implements Serializable, Runnable {
 		
 	}
 	
-	public void run(){
-		System.out.println("Test GUI is Working");
+	private void serverConnection() throws IOException{
+		playerSocket = new Socket("localhost",8080);
+		playerIn = new ObjectInputStream(playerSocket.getInputStream());
+		playerOut = new ObjectOutputStream(playerSocket.getOutputStream());
 	}
-
+	
 }

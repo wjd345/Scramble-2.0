@@ -27,4 +27,4 @@ will write unit tests as creating new classes to ensure functionality.
 Changed to have a simple socket server...nothing too crazy with this re-make. Working with game engine to make sure logic is working properly.
 
 07/12/2017: Back at it again...\n
-Implementation of a "SplashPage" class where users see the game name and option buttons to either start a game or quit game play
+Implementation of a "SplashPage" class where users see the game name and option buttons to either start a game or quit game play. Need to work on Creating a EDT for the GUI Implementation. Server is working in regards to receiving user input and sending back, need to work with multiple thread types.

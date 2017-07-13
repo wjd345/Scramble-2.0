@@ -5,7 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class ScrambleSplashPage implements Runnable {
+public class ScrambleSplashPage extends JFrame implements Runnable {
+	
 	
 	public JPanel splashPanel;
 	public JPanel upper;
@@ -13,10 +14,10 @@ public class ScrambleSplashPage implements Runnable {
 	public JLabel splashLabel;
 	public JButton startButton;
 	public JButton quitButton;
+	private boolean isAlive = true;
 	
 	private ScrambleGui gameMenu;
 	
-	public JFrame splashFrame;
 	
 	public ScrambleSplashPage(){
 		
@@ -48,10 +49,13 @@ public class ScrambleSplashPage implements Runnable {
 
 	         public void actionPerformed(ActionEvent e)
 	         {
-	            splashFrame.remove(splashPanel);
-	            splashPanel = new ScrambleGui();
-	            splashFrame.add(splashPanel);
-	            splashFrame.repaint();
+	        	gameMenu = new ScrambleGui();
+	        	
+	            remove(splashPanel);
+	            add(gameMenu,BorderLayout.CENTER);
+	            revalidate();
+	            repaint();
+	            pack();
 	            
 	         }
 
@@ -80,12 +84,12 @@ public class ScrambleSplashPage implements Runnable {
 	
 	public void run(){
 	    
-		JFrame 	splashFrame = new JFrame();
-	    splashFrame.add(splashPanel);
-	    splashFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    splashFrame.pack();
-	    splashFrame.setVisible(true);
-	    
+		while(isAlive){
+		    add(splashPanel);
+		    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    pack();
+		    setVisible(true);
+		}
 	    
 	}
 	
