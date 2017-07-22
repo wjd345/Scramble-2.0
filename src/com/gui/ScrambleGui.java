@@ -14,15 +14,18 @@ public class ScrambleGui extends JPanel implements Serializable {
 	
 	// JPanel Variables
 	private JTextArea testText;
-	private JButton quitButton, serverTestConnection;
+	private JButton quitButton, serverTestConnection, titleScreen;
 	private JTextField testEntry;
 	private Socket playerConnection;
 	
 	// I/O Connections to Server;
 	private Socket playerSocket;
-	private ObjectInputStream playerIn;
-	private ObjectOutputStream playerOut;
-	private String readIn;
+	private BufferedReader playerIn;
+	private BufferedWriter playerOut;
+	private PrintWriter out;
+	private int readIn;
+	private String playerWords;
+	
 	
 	public ScrambleGui(){
 		
@@ -30,6 +33,7 @@ public class ScrambleGui extends JPanel implements Serializable {
 		testText = new JTextArea("Test String");
 		testEntry = new JTextField();
 		serverTestConnection = new JButton("Connect to Server");
+		titleScreen = new JButton("TitleScreen");
 		quitButton = new JButton("Quit");
 		
 		setPreferredSize(new Dimension(600,800));
@@ -51,40 +55,37 @@ public class ScrambleGui extends JPanel implements Serializable {
 		
 		setVisible(true);
 		
+		
+		
 		testEntry.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
+	
 				String text = testEntry.getText();
 				
+				System.out.println(text);
 				try{
-					playerOut.writeObject(text);
-					playerOut.flush();
-					
-					String serverText = (String)playerIn.readObject();
-					testText.setText(serverText);
-					
-				}catch(IOException | ClassNotFoundException ioe){
-					System.out.println("Error: " + ioe.getMessage());
-					ioe.printStackTrace();
+					playerOut.write(testEntry.getText());
+				}catch(IOException ioe){
+					System.err.println("Error-" + ioe.getMessage());
 				}
-				
-				testEntry.setText("");
+
 			}
 		});
 		
 		serverTestConnection.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				
+				
 				try{
+					
 					serverConnection();
-					readIn = (String)playerIn.readObject();
-					testText.setText(readIn);
-					if(playerSocket.isConnected()){
-						serverTestConnection.setVisible(false);
-						
-					}
-				}catch(IOException | ClassNotFoundException ioe){
+					readIn = playerIn.read();
+					testText.setText("Player Number" + readIn);
+
+				}catch(IOException ioe){
 					System.out.println("Error-" + ioe.getMessage());
 				}
+				
 				
 			}
 		});
@@ -98,13 +99,21 @@ public class ScrambleGui extends JPanel implements Serializable {
 	    		System.exit(0);
 	    	}
 	    });
+	    
 		
 	}
 	
 	private void serverConnection() throws IOException{
 		playerSocket = new Socket("localhost",8080);
-		playerIn = new ObjectInputStream(playerSocket.getInputStream());
-		playerOut = new ObjectOutputStream(playerSocket.getOutputStream());
+		playerIn = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
+		playerOut = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
+		out = new PrintWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
+	}
+	
+	private void closeConnections() throws IOException{
+		playerOut.close();
+		playerIn.close();
+		playerSocket.close();
 	}
 	
 }

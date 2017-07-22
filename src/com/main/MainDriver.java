@@ -16,13 +16,13 @@ public class MainDriver {
 	
 	public static void main(String[] args) {
 		
-		ScrambleServer server = new ScrambleServer();
+		/*ScrambleServer server = new ScrambleServer();
 		new Thread(server).start();
 		
 		ScrambleSplashPage splashPage = new ScrambleSplashPage();
 		new Thread(splashPage).start();
 		
-		/*ScrambleSplashPage splashPage1 = new ScrambleSplashPage();
+		ScrambleSplashPage splashPage1 = new ScrambleSplashPage();
 		new Thread(splashPage1).start();
 		
 		ScrambleSplashPage splashPage2 = new ScrambleSplashPage();

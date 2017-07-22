@@ -15,11 +15,10 @@ public class ScrambleServer implements Runnable {
 	
 	//Server I/O
 	private ServerSocket serverSocket;
-	private ObjectInputStream playerIn;
-	private ObjectOutputStream playerOut;
+	private BufferedReader playerIn;
+	private BufferedWriter playerOut;
 	private Socket player;
 
-	
 	// Private Server Variables
 	private int serverSession = 0;
 	private int playerNumber = 0;
@@ -73,8 +72,6 @@ public class ScrambleServer implements Runnable {
 		
 	}
 	
-
-	
 	public void closeConnections() throws IOException{
 		
 		playerIn.close();
@@ -84,26 +81,64 @@ public class ScrambleServer implements Runnable {
 	
 	public void run(){
 		
+		String playerWord;
+		String wordResult;
+		
+		
 		while(playerNumber < PLAYER_SERVER_MAX){
+			
 			try{
 				
 				player = serverSocket.accept();
 				playerNumber += 1;
 				
-				playerOut = new ObjectOutputStream(player.getOutputStream());
+				playerOut = new BufferedWriter(new OutputStreamWriter(player.getOutputStream()));
 				
-				playerIn = new ObjectInputStream(player.getInputStream());
+				playerIn = new BufferedReader(new InputStreamReader(player.getInputStream()));
+				
+				jtaLog.append("Player: " + playerNumber + " on IP Address: " + player.getInetAddress() + ".\n");
+				jtaLog.append("Player: " + playerNumber + " joined on: " + currentDate + ".\n");
+				
+				playerOut.write(playerNumber);
+				playerOut.flush();
+				
+				while((playerWord = playerIn.readLine()) != null){
+					if(testDict.contains(playerWord)){
+						wordResult = "Word: " + playerWord + " is a Word.";
+						jtaLog.append(wordResult + "\n");
+					}else{
+						wordResult = "Word: " + playerWord + " is not a Word.";
+						jtaLog.append(wordResult + "\n");
+					}
+					
+					playerOut.write(wordResult);
+					playerOut.flush();
+				};
+				
+			}catch(IOException ioe){
+				System.err.println("Error - " + ioe.getMessage());
+			}
+		}
+			
+		
+		/*while(playerNumber < PLAYER_SERVER_MAX){
+			try{
+				
+				player = serverSocket.accept();
+				playerNumber += 1;
+				
+				playerOut = new BufferedWriter(new OutputStreamWriter(player.getOutputStream()));
+				
+				playerIn = new BufferedReader(new InputStreamReader(player.getInputStream()));
 				
 				jtaLog.append("Player: " + playerNumber + " on IP Address: " + player.getInetAddress() + ".\n");
 				jtaLog.append("Player: " + playerNumber + " joined on: " + currentDate + ".\n");
 				
 				String playerInformation = "The Player is: " + playerNumber;
-				playerOut.writeObject(playerInformation);
+				playerOut.write(playerInformation);
 				playerOut.flush();
 				
-				String playerWord = (String)playerIn.readObject();
-				
-				String wordResult;
+				playerWord = playerIn.readLine();
 				
 				if(testDict.contains(playerWord)){
 					wordResult = "Word: " + playerWord + " is a Word.";
@@ -113,12 +148,12 @@ public class ScrambleServer implements Runnable {
 					jtaLog.append(wordResult + "\n");
 				}
 				
-				playerOut.writeObject(wordResult);
+				playerOut.write(wordResult);
 				playerOut.flush();
 				
 				
 				
-				/*
+				
 				if(playerNumber == 0 && !playerTwo.isConnected()){
 					playerOne = serverSocket.accept();
 					playerNumber += 1;
@@ -144,12 +179,16 @@ public class ScrambleServer implements Runnable {
 					playerSet.addElement(newPlayerObj);
 					
 					jtaLog.append("Player: " + playerNumber + "has joined Session: " + serverSession);
-				}*/
-			}catch(IOException|ClassNotFoundException ex){
+				}
+			}catch(IOException ex){
 				System.out.println("Error" + ex.getMessage());
-			}
+			}*/
 			
-		}
 		
+	}
+	
+	public static void main(String[] args){
+		ScrambleServer server = new ScrambleServer();
+		new Thread(server).start();
 	}
 }
