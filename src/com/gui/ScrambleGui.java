@@ -10,25 +10,23 @@ import java.awt.event.*;
 
 
 
-public class ScrambleGui extends JPanel implements Serializable {
+public class ScrambleGui extends JPanel {
 	
 	// JPanel Variables
 	private JTextArea testText;
 	private JButton quitButton, serverTestConnection, titleScreen;
 	private JTextField testEntry;
-	private Socket playerConnection;
 	
 	// I/O Connections to Server;
 	private Socket playerSocket;
 	private BufferedReader playerIn;
-	private BufferedWriter playerOut;
+	private DataOutputStream playerOut;
 	private PrintWriter out;
 	private int readIn;
 	private String playerWords;
 	
 	
 	public ScrambleGui(){
-		
 		
 		testText = new JTextArea("Test String");
 		testEntry = new JTextField();
@@ -38,6 +36,7 @@ public class ScrambleGui extends JPanel implements Serializable {
 		
 		setPreferredSize(new Dimension(600,800));
 		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+		
 		
 		testText.setAlignmentX(Component.CENTER_ALIGNMENT);
 		testEntry.setBorder(BorderFactory.createEmptyBorder(10, 20, 5,20));
@@ -59,12 +58,11 @@ public class ScrambleGui extends JPanel implements Serializable {
 		
 		testEntry.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-	
-				String text = testEntry.getText();
-				
-				System.out.println(text);
+				String userEntry = testEntry.getText();
 				try{
-					playerOut.write(testEntry.getText());
+					playerOut.writeUTF(userEntry);
+					playerOut.flush();
+					testEntry.setText("");
 				}catch(IOException ioe){
 					System.err.println("Error-" + ioe.getMessage());
 				}
@@ -81,6 +79,7 @@ public class ScrambleGui extends JPanel implements Serializable {
 					serverConnection();
 					readIn = playerIn.read();
 					testText.setText("Player Number" + readIn);
+					serverTestConnection.setVisible(false);
 
 				}catch(IOException ioe){
 					System.out.println("Error-" + ioe.getMessage());
@@ -94,8 +93,7 @@ public class ScrambleGui extends JPanel implements Serializable {
 	    quitButton.addActionListener(new ActionListener(){
 	    	
 	    	public void actionPerformed(ActionEvent e){
-	    		
-	    		System.out.println("Thank You For Playing!");
+	    		System.out.println("Thank you for playing!");
 	    		System.exit(0);
 	    	}
 	    });
@@ -106,14 +104,16 @@ public class ScrambleGui extends JPanel implements Serializable {
 	private void serverConnection() throws IOException{
 		playerSocket = new Socket("localhost",8080);
 		playerIn = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
-		playerOut = new BufferedWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
+		playerOut = new DataOutputStream(playerSocket.getOutputStream());
 		out = new PrintWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
+		System.out.println("Connection Successful...");
 	}
 	
 	private void closeConnections() throws IOException{
 		playerOut.close();
 		playerIn.close();
 		playerSocket.close();
+		System.out.println("Successfully closed connections...");
 	}
 	
 }

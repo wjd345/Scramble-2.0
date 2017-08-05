@@ -15,7 +15,7 @@ public class ScrambleServer implements Runnable {
 	
 	//Server I/O
 	private ServerSocket serverSocket;
-	private BufferedReader playerIn;
+	private DataInputStream playerIn;
 	private BufferedWriter playerOut;
 	private Socket player;
 
@@ -85,7 +85,7 @@ public class ScrambleServer implements Runnable {
 		String wordResult;
 		
 		
-		while(playerNumber < PLAYER_SERVER_MAX){
+		while(true){
 			
 			try{
 				
@@ -94,7 +94,7 @@ public class ScrambleServer implements Runnable {
 				
 				playerOut = new BufferedWriter(new OutputStreamWriter(player.getOutputStream()));
 				
-				playerIn = new BufferedReader(new InputStreamReader(player.getInputStream()));
+				playerIn = new DataInputStream(player.getInputStream());
 				
 				jtaLog.append("Player: " + playerNumber + " on IP Address: " + player.getInetAddress() + ".\n");
 				jtaLog.append("Player: " + playerNumber + " joined on: " + currentDate + ".\n");
@@ -102,7 +102,8 @@ public class ScrambleServer implements Runnable {
 				playerOut.write(playerNumber);
 				playerOut.flush();
 				
-				while((playerWord = playerIn.readLine()) != null){
+				
+				while((playerWord = playerIn.readUTF()) != null){
 					if(testDict.contains(playerWord)){
 						wordResult = "Word: " + playerWord + " is a Word.";
 						jtaLog.append(wordResult + "\n");
@@ -113,7 +114,7 @@ public class ScrambleServer implements Runnable {
 					
 					playerOut.write(wordResult);
 					playerOut.flush();
-				};
+				}
 				
 			}catch(IOException ioe){
 				System.err.println("Error - " + ioe.getMessage());

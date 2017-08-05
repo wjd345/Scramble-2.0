@@ -28,3 +28,8 @@ Changed to have a simple socket server...nothing too crazy with this re-make. Wo
 
 07/12/2017: Back at it again...\n
 Implementation of a "SplashPage" class where users see the game name and option buttons to either start a game or quit game play. Need to work on Creating a EDT for the GUI Implementation. Server is working in regards to receiving user input and sending back, need to work with multiple thread types.
+
+08/04/2017: Back Again Guys...\n
+Hello all it has been a while since I last made any updates to anything really but this project/ review thing that I for some reason set up is back on its feed. I finally figured
+out why the server was not continuously handling input and had that error fixed with a simple weird looking layout that is going to be fixed pretty shortly. I am also experimenting
+with a card layout for the initial frame to get everything working on the same run thread.

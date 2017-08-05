@@ -16,25 +16,33 @@ public class ScrambleSplashPage extends JFrame implements Runnable {
 	private JButton quitButton;
 	private GridBagConstraints constraints;
 	private boolean isAlive = true;
-	
+	private Color bgColor = new Color(250,210,20);
+	private CardLayout cLayout;
+	private JPanel[] cardPanels;
 	private ScrambleGui gameMenu;
 	
 	
 	public ScrambleSplashPage(){
+		super("Scramble Splash Page");
 		
 		splashPanel = new JPanel();
 		splashLabel = new JLabel("SCRAMBLE!");
 		startButton = new JButton("Press to Play");
 		quitButton = new JButton("Quit");
+		cardPanels = new JPanel[4];
+		cLayout = new CardLayout();
 		constraints = new GridBagConstraints();
+		lower = new JPanel();
+		lower.setBackground(bgColor);
+		//lower.setLayout(new BorderLayout());
 
 	    startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    quitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
-	    splashPanel.setBackground(new Color(250,210,20));//setting background color
-	    splashPanel.setLayout(new BorderLayout());
-	    splashPanel.setLayout(new GridBagLayout());
+	    splashPanel.setBackground(bgColor);//setting background color
+	    //splashPanel.setLayout(new BorderLayout());
+	    splashPanel.setLayout(new GridLayout(2,1));
 	    Font splashFont = new Font("Sans Serif", Font.BOLD, 70);
 	    splashLabel.setFont(splashFont);
 	    splashLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -50,6 +58,7 @@ public class ScrambleSplashPage extends JFrame implements Runnable {
 	        	
 	            remove(splashPanel);
 	            add(gameMenu,BorderLayout.CENTER);
+	            setTitle("Scramble!!!");
 	            revalidate();
 	            repaint();
 	            pack();
@@ -67,23 +76,12 @@ public class ScrambleSplashPage extends JFrame implements Runnable {
 	    	}
 	    });
 	    
-	    constraints.gridwidth = 3;
-	    constraints.fill = GridBagConstraints.HORIZONTAL;
-	    constraints.anchor = GridBagConstraints.CENTER;
-	    splashLabel.setBorder(BorderFactory.createLineBorder(Color.black));
-	    splashPanel.add(splashLabel,constraints);
+
+	    splashPanel.add(splashLabel);
+	    lower.add(startButton);
+	    lower.add(quitButton);
+	    splashPanel.add(lower);
 	    
-	   // constraints.gridwidth = 1;
-	    //constraints.fill = GridBagConstraints.SOUTH;
-	    constraints.anchor = GridBagConstraints.NORTH;
-	    splashPanel.add(startButton, constraints);
-	    
-	    //constraints.gridwidth = 1;
-	    constraints.anchor = GridBagConstraints.SOUTH;
-	    
-	    splashPanel.add(quitButton, constraints);
-	    
-	    //splashPanel.add(startButton);
 	    
 	    splashPanel.setPreferredSize(new Dimension(600,800));
 	    
