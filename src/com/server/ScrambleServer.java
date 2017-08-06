@@ -9,6 +9,7 @@ import java.util.Vector;
 
 
 import com.gamelogic.Player;
+import com.gamelogic.GameEngine;
 import com.dictionary.*;
 
 public class ScrambleServer implements Runnable {
@@ -16,7 +17,7 @@ public class ScrambleServer implements Runnable {
 	//Server I/O
 	private ServerSocket serverSocket;
 	private DataInputStream playerIn;
-	private BufferedWriter playerOut;
+	private DataOutputStream playerOut;
 	private Socket player;
 
 	// Private Server Variables
@@ -81,10 +82,6 @@ public class ScrambleServer implements Runnable {
 	
 	public void run(){
 		
-		String playerWord;
-		String wordResult;
-		
-		
 		while(true){
 			
 			try{
@@ -92,7 +89,7 @@ public class ScrambleServer implements Runnable {
 				player = serverSocket.accept();
 				playerNumber += 1;
 				
-				playerOut = new BufferedWriter(new OutputStreamWriter(player.getOutputStream()));
+				playerOut = new DataOutputStream(player.getOutputStream());
 				
 				playerIn = new DataInputStream(player.getInputStream());
 				
@@ -102,8 +99,9 @@ public class ScrambleServer implements Runnable {
 				playerOut.write(playerNumber);
 				playerOut.flush();
 				
+				new Thread(new GameEngine(player)).start();
 				
-				while((playerWord = playerIn.readUTF()) != null){
+				/*while((playerWord = playerIn.readUTF()) != null){
 					if(testDict.contains(playerWord)){
 						wordResult = "Word: " + playerWord + " is a Word.";
 						jtaLog.append(wordResult + "\n");
@@ -112,9 +110,9 @@ public class ScrambleServer implements Runnable {
 						jtaLog.append(wordResult + "\n");
 					}
 					
-					playerOut.write(wordResult);
+					playerOut.writeUTF(wordResult);
 					playerOut.flush();
-				}
+				}*/
 				
 			}catch(IOException ioe){
 				System.err.println("Error - " + ioe.getMessage());

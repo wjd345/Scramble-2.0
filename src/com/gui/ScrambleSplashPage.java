@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.server.ScrambleServer;
+
 
 public class ScrambleSplashPage extends JFrame implements Runnable {
 	

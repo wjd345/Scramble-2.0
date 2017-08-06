@@ -8,7 +8,7 @@ package com.gamelogic;
 
 import com.dictionary.Dictionary;
 import java.io.*;
-import java.nio.*;
+import java.net.*;
 import java.util.Vector;
 
 
@@ -16,10 +16,31 @@ public class GameEngine implements Runnable {
 	
 	private Player playerOne;
 	private Player playerTwo;
+	private Socket playerSocket;
+	
+	private DataInputStream playerIn;
+	private DataOutputStream playerOut;
+	
 	private Dictionary dictionary;
-	private ObjectOutputStream outPlayerInfo;
 	private Vector<Player> outPlayers = new Vector<>();
-	private Thread runner; 
+	
+	private String playerWord;
+	private String wordResult;
+	
+	private int playerScore = 0;
+	
+	public GameEngine(Socket playerSocket){
+		this.playerSocket = playerSocket;
+		try{
+			dictionary = new Dictionary();
+			
+			playerIn = new DataInputStream(this.playerSocket.getInputStream());
+			playerOut = new DataOutputStream(this.playerSocket.getOutputStream());
+			
+		}catch(IOException ioe){
+			System.out.println("Error: " + ioe.getMessage());
+		}
+	}
 	
 	/**
 	 * Constructor that takes in a single player for game play.
@@ -29,10 +50,6 @@ public class GameEngine implements Runnable {
 		playerOne = p1;
 		try {
 			dictionary = new Dictionary();
-			if(runner == null) {
-				runner = new Thread(this);
-				runner.start();
-			}
 		}catch(IOException ioe) {
 			System.err.println("Error - Unable to find Dictionary File");
 			System.exit(0);
@@ -50,10 +67,6 @@ public class GameEngine implements Runnable {
 		
 		try {
 			dictionary = new Dictionary();
-			if(runner == null) {
-				runner = new Thread(this);
-				runner.start();
-			}
 			
 		}catch(IOException ioe) {
 			System.err.println("Error - Unable to find Dictionary File");
@@ -143,29 +156,37 @@ public class GameEngine implements Runnable {
 		
 	}
 	
-	public void sendPlayers(){
-		
-		outPlayers.add(playerOne);
-		outPlayers.add(playerTwo);
-		
-		runner = null;
-		
-	}
-	
 	public Vector<Player> getPlayers(){
 		return outPlayers;
+	}
+	
+	public void scoreWord(String word){
+		if(dictionary.contains(word)){
+			playerScore += word.length();
+		}else{
+			playerScore += 0;
+		}
 	}
 	
 	@Override
 	public void run() {
 		//TODO: Implement runnable
-		Thread currentThread = Thread.currentThread();
-		while(runner == currentThread) {
-			scorePlayers();
-			gameResult();
-			sendPlayers();
+		try{
+			while((playerWord = playerIn.readUTF()) != null){
+				if(dictionary.contains(playerWord)){
+					scoreWord(playerWord);
+					wordResult = "Word: " + playerWord + " is a Word. Score is: " + playerScore;
+				}else{
+					scoreWord(playerWord);
+					wordResult = "Word: " + playerWord + " is not a Word. Score is: " + playerScore;
+				}
+				
+				playerOut.writeUTF(wordResult);
+				playerOut.flush();
+			}
+		}catch(IOException ioe){
+			System.out.println("Error: " + ioe.getMessage());
 		}
 	}
 	
-
 }

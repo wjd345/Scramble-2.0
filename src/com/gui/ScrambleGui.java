@@ -19,12 +19,11 @@ public class ScrambleGui extends JPanel {
 	
 	// I/O Connections to Server;
 	private Socket playerSocket;
-	private BufferedReader playerIn;
+	private DataInputStream playerIn;
 	private DataOutputStream playerOut;
 	private PrintWriter out;
 	private int readIn;
 	private String playerWords;
-	
 	
 	public ScrambleGui(){
 		
@@ -33,10 +32,11 @@ public class ScrambleGui extends JPanel {
 		serverTestConnection = new JButton("Connect to Server");
 		titleScreen = new JButton("TitleScreen");
 		quitButton = new JButton("Quit");
+		JPanel buttonPanel = new JPanel();
 		
 		setPreferredSize(new Dimension(600,800));
-		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		
+		//setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+		setLayout(new GridLayout(3,1));
 		
 		testText.setAlignmentX(Component.CENTER_ALIGNMENT);
 		testEntry.setBorder(BorderFactory.createEmptyBorder(10, 20, 5,20));
@@ -45,24 +45,16 @@ public class ScrambleGui extends JPanel {
 		serverTestConnection.setAlignmentX(Component.CENTER_ALIGNMENT);
 		quitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
-		add(testEntry);
-		add(testText);
-		add(serverTestConnection);
-		add(quitButton);
-		
-		setBackground(new Color(250,210,20));
-		
-		setVisible(true);
-		
-		
-		
 		testEntry.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				String userEntry = testEntry.getText();
+				String userEntry = testEntry.getText().toLowerCase();
+				
 				try{
 					playerOut.writeUTF(userEntry);
 					playerOut.flush();
 					testEntry.setText("");
+					playerWords = playerIn.readUTF();
+					testText.setText(playerWords);
 				}catch(IOException ioe){
 					System.err.println("Error-" + ioe.getMessage());
 				}
@@ -73,19 +65,15 @@ public class ScrambleGui extends JPanel {
 		serverTestConnection.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				
-				
 				try{
-					
 					serverConnection();
 					readIn = playerIn.read();
 					testText.setText("Player Number" + readIn);
 					serverTestConnection.setVisible(false);
-
 				}catch(IOException ioe){
 					System.out.println("Error-" + ioe.getMessage());
 				}
-				
-				
+			
 			}
 		});
 		
@@ -98,12 +86,22 @@ public class ScrambleGui extends JPanel {
 	    	}
 	    });
 	    
+		add(testEntry);
+		add(testText);
+		buttonPanel.add(serverTestConnection);
+		buttonPanel.add(quitButton);
+		add(buttonPanel);
+		
+		setBackground(new Color(250,210,20));
+		
+		setVisible(true);
+	    
 		
 	}
 	
 	private void serverConnection() throws IOException{
 		playerSocket = new Socket("localhost",8080);
-		playerIn = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
+		playerIn = new DataInputStream(playerSocket.getInputStream());
 		playerOut = new DataOutputStream(playerSocket.getOutputStream());
 		out = new PrintWriter(new OutputStreamWriter(playerSocket.getOutputStream()));
 		System.out.println("Connection Successful...");

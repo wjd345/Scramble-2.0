@@ -33,3 +33,6 @@ Implementation of a "SplashPage" class where users see the game name and option 
 Hello all it has been a while since I last made any updates to anything really but this project/ review thing that I for some reason set up is back on its feed. I finally figured
 out why the server was not continuously handling input and had that error fixed with a simple weird looking layout that is going to be fixed pretty shortly. I am also experimenting
 with a card layout for the initial frame to get everything working on the same run thread.
+
+08/05/2017: It's Getting There...\n
+Once again back at working at this thing before the school year. Fixed the server class to create a new game engine thread so that multiple players are allowed in the server. Will also properly increment and thread the amount of player GUIs to connect to the server.
